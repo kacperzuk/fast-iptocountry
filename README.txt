@@ -1,4 +1,4 @@
-# iptocountry-fast
+# fast-iptocountry
 
 Node.JS module for getting GeoLocation for a given IP address focused on
 performance. It uses database from http://software77.net/geo-ip/ , which is a
@@ -6,7 +6,7 @@ Donationware (read more here: http://software77.net/geo-ip/?license ) .
 
 ## Installation
 
-`npm install --save iptocountry-fast`
+`npm install --save fast-iptocountry
 
 ## Description
 

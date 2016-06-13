@@ -1,6 +1,6 @@
 {
   "name": "fast-iptocountry",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "IPv4 to Country using Webnet77's database from http://software77.net/geo-ip/",
   "main": "index.js",
   "scripts": {
