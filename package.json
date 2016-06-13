@@ -1,0 +1,30 @@
+{
+  "name": "fast-iptocountry",
+  "version": "0.0.1",
+  "description": "IPv4 to Country using Webnet77's database from http://software77.net/geo-ip/",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kacperzuk/fast-iptocountry.git"
+  },
+  "keywords": [
+    "geoip",
+    "ip",
+    "iptocountry"
+  ],
+  "author": "Kacper Żuk <npm@kacperzuk.pl>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kacperzuk/fast-iptocountry/issues"
+  },
+  "homepage": "https://github.com/kacperzuk/fast-iptocountry#readme",
+  "dependencies": {
+    "byline": "^4.2.1",
+    "csv-parse": "^1.1.1",
+    "ip": "^1.1.3",
+    "sorted": "^0.1.1"
+  }
+}
