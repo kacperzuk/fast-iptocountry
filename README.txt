@@ -69,5 +69,4 @@ asd - { code: 'ZZ', country: 'Reserved' }
 * IPv6 not even tested...
 * Memory usage is high
 * Benchmarking
-* It's not safe to call `.load({ update: true })` for the same cache directory before the previous one finishes (including both from single or multiple processes).
 * Proper tests
