@@ -2,8 +2,8 @@
 
 const EventEmitter = require('events');
 const sorted = require('sorted');
-const byline = require('byline');
 const fs = require('fs');
+const fsext = require('fs-ext');
 const ip = require('ip');
 const http = require('http');
 const zlib = require('zlib');
@@ -12,8 +12,8 @@ const csvparse = require('csv-parse');
 const rawDbUrl = "http://software77.net/geo-ip/?DL=1";
 
 const rawDbFilename = "iptocountry.csv";
-
 const dbFilename = "db.txt";
+const lockFilename = "db.lock";
 
 let database = sorted();
 
@@ -57,9 +57,10 @@ class IPtoCountry extends EventEmitter {
     } catch(e) {}
   }
 
-  _load() {
+  _load(fd) {
     fs.readFile(this.cachedir + "/" + dbFilename, (err, data) => {
       if(err) throw err;
+      fsext.flock(fd, 'un');
       database = sorted(JSON.parse(data), (aa,bb) => {
         let a = aa[0];
         let b = bb[0];
@@ -92,23 +93,38 @@ class IPtoCountry extends EventEmitter {
 
   load(options) {
     if(!options) options = {};
-    if(options.update) {
-      // FIXME: make it parallel instead of sequential. promises maybe?
-      // FIXME: unsafe when run from multiple processes
-      /*http.get(rawDbUrl, (response) => {
-        const writeStream = fs.createWriteStream(this.cachedir + "/" + rawDbFilename);
-        const readStream = response.pipe(zlib.createGunzip());
-        readStream.on("data", (data) => writeStream.write(data));
-        readStream.on("end", () => {
-          writeStream.close();*/
-          this._parseRawDb(() => {
-            this._load();
+    fs.open(this.cachedir + "/" + lockFilename, 'a', (err, fd) => {
+      if(err) throw err;
+      if(options.update) {
+        fsext.flock(fd, 'exnb', (err) => {
+          if(err) {
+            if(err.code == "EAGAIN") {
+              this.emit('cache_locked');
+              return;
+            } else {
+              throw err;
+            }
+          }
+          // FIXME: make it parallel instead of sequential. promises maybe?
+          http.get(rawDbUrl, (response) => {
+            const writeStream = fs.createWriteStream(this.cachedir + "/" + rawDbFilename);
+            const readStream = response.pipe(zlib.createGunzip());
+            readStream.on("data", (data) => writeStream.write(data));
+            readStream.on("end", () => {
+              writeStream.close();
+              this._parseRawDb(() => {
+                this._load(fd);
+              });
+            });
           });
-        /*});
-      });*/
-    } else {
-      this._load();
-    }
+        });
+      } else {
+        fsext.flock(fd, 'sh', (err) => {
+          if(err) throw err;
+          this._load(fd);
+        });
+      }
+    });
   }
 
   lastUpdated(callback) {

@@ -24,6 +24,15 @@ var arr = ['50.21.180.100',
   'asd'
 ];
 
+// cache_locked event is emitted if load({ update: true }) is called in
+// parallel (even from or multiple processes)
+iptocountry.on('cache_locked', function() {
+  // assume another process is updating the cache
+  // .load() will wait until cache is updated
+  console.log("cache_locked");
+  iptocountry.load();
+});
+
 // ready event is emitted when the database has been loaded
 iptocountry.on("ready", function() {
   arr.forEach(function(ip) {
