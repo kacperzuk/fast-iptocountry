@@ -2,8 +2,6 @@
 
 Node.JS module for getting GeoLocation for a given IP address focused on
 performance. It uses database from http://software77.net/geo-ip/ , which is a
-Donationware (read more here: http://software77.net/geo-ip/?license ) .
-
 ## Installation
 
 `npm install --save fast-iptocountry
@@ -20,7 +18,7 @@ disk space and about 80MB of memory.
 ```javascript
 // you must pass a directory in which database will be saved
 // if it doesn't exist, it will be created
-const iptocountry = require("./index")("cache/");
+const iptocountry = require("fast-iptocountry")("cache/");
 
 // check when the database was updated
 // t are days
